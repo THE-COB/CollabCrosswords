@@ -16,3 +16,7 @@ node index.js
 For the client, go to *:3000
 
 HAVE FUN!
+
+## Coming Soon
+Configuration file for the clue and xw file
+Function that focusses on the input beginning a clue number when you click on the clue
