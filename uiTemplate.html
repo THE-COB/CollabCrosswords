@@ -1,0 +1,428 @@
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+	class Box{
+		constructor(coord, blacked, num, ans){
+			this.coordinate = coord;
+			this.isBlacked = blacked;
+			if(blacked){
+				this.number = null;
+				this.letter = null;
+				return;
+			}
+			this.number = num;
+			this.letter = ans;
+			this.clues = [0,0]
+		}
+
+		setAcross(a){
+			this.clues[0] = a;
+		}
+		setDown(d){
+			this.clues[1] = d;
+		}
+
+		str(){
+			var strForm = "";
+			strForm+=this.coordinate[0]+','+this.coordinate[1];
+			if(this.isBlacked){
+				strForm+="!B";
+				return strForm;
+			}
+			strForm+=this.letter;
+			if(this.number !== null){
+				strForm+='n'+this.number;
+			}
+			strForm+='c'+this.clues[0]+','+this.clues[1]
+			return strForm;
+		}
+	}
+
+	function makeBox(boxString){
+		var coordGroups = /([0-9]+),([0-9]+)/.exec(boxString);
+		var coords = [parseInt(coordGroups[1]),parseInt(coordGroups[2])];
+		var blackChecker = new RegExp('!B');
+		if(boxString.match(blackChecker)){
+			var newBox = new Box(coords,true);
+			return newBox;
+		}
+		var letsEtc = /[0-9]+,[0-9]+([A-Z])(n([0-9]+))?c([0-9]+),([0-9]+)/;
+		var boxMatch = letsEtc.exec(boxString);
+		var letter = boxMatch[1];
+		var number = null;
+		if(boxMatch[3]){
+			number = parseInt(boxMatch[3])
+		}
+		var newBox = new Box(coords,false,number,letter);
+		newBox.setAcross(parseInt(boxMatch[4]));
+		newBox.setDown(parseInt(boxMatch[5]));
+		return newBox;
+	}
+
+	function addBox(box){
+		var grids = document.getElementsByClassName("grid__item");
+		var gridNum = box.coordinate[1]*15+box.coordinate[0];
+		if(box.isBlacked){
+			grids[gridNum].innerHTML = '<input type="text" class="blacked" id="'+gridNum+'-" maxlength="0">';
+			return;
+		}
+		var numString = "";
+		var classStr = "letBox ";
+		if(box.number !== null){
+			numString = "<p>"+box.number+"</p>";
+			classStr+="numput";
+		}
+		grids[gridNum].innerHTML = numString+'<input onkeypress="return /[a-z]/i.test(event.key)" type="text" id="'+gridNum+box.letter+'" class="'+classStr+'" maxlength="1">';
+
+	}
+
+</script>
+
+
+<style type="text/css">
+	.grid {
+		width: 300px;
+		height: 300px;
+		display: grid;
+		grid-template: repeat(15, 15%)/repeat(15, 15%);
+		position: relative;
+	}
+	.grid__item {
+		border: 1px solid #000000;
+		position: relative;
+	}
+
+	.blacked{
+		background-color: #000000;
+		pointer-events: none;
+		position: relative;
+		top: 0;
+	}
+
+	input{
+		max-width: 44px;
+		height: 44px;
+		font-size: 20px;
+		text-align: center;
+		text-transform: uppercase;
+		z-index: 0;
+		position: relative;
+	}
+
+	.numput{
+		top: -50px;
+	}
+
+	p{
+		z-index: 1;
+		position: relative;
+		top: -15px;
+		height: fit-content;
+	}
+</style>
+
+<div class="grid">
+	<span class="grid__item"><p>1</p><input type="text" maxlength="1" name=""></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+	<span class="grid__item"></span>
+</div>
+
+<style type="text/css">
+	#clues{
+		position: relative;
+		padding-top: 400px;
+		z-index: -1;
+	}
+	ul{
+		float: left;
+		border: 1px solid black;
+		height: 300px;
+		width: 20%;
+		overflow: scroll;
+	}
+
+	li{
+		font-size: 20px;
+	}
+</style>
+
+<script type="text/javascript">
+	function addClue(num, text, isAcross){
+		var newClue = document.createElement("li");
+		var idLetter = "d";
+		var ulId = "down";
+		if(isAcross){
+			idLetter = "a";
+			ulId = "across";
+		}
+		newClue.id = num+idLetter;
+		newClue.innerHTML = num+": "+text;
+
+		document.getElementById(ulId).appendChild(newClue);
+		document.getElementById(ulId).appendChild(document.createElement("br"));
+	}
+</script>
+
+<div id="clues">
+	<ul id="across">
+		<h3 style="padding-right: 40px">Across</h3>
+	</ul>
+	<ul id="down">
+		<h3 style="padding-right: 40px">Down</h3>
+	</ul>
+</div>
+
+<script type="text/javascript">
+	$(function () {
+		var socket = io();
+		socket.on("newBox", (newBox) => {
+			if(newBox === ""){
+				$(".letBox").on("input", function(){
+					if(this.value !== ""){
+						socket.emit("letterChange", this.id+","+this.value);
+					}
+				});
+			}
+			else{
+				addBox(makeBox(newBox));
+			}
+		});
+
+		socket.on("clue", (newClue) => {
+			addClue(newClue[0],newClue[1],newClue[2]);
+		});
+
+		socket.on("changeLetter", (fix) => {
+			$("#"+fix[0]).val(fix[1]);
+		});
+
+		socket.on("finished", (fin) => {
+			alert("CROSSWORD COMPLETE");
+		});
+	});
+
+
+</script>
