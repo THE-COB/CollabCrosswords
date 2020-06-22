@@ -73,7 +73,11 @@
 			numString = "<p>"+box.number+"</p>";
 			classStr+="numput";
 		}
-		grids[gridNum].innerHTML = numString+'<input onkeypress="return /[a-z]/i.test(event.key)" type="text" id="'+gridNum+box.letter+'" class="'+classStr+'" maxlength="1">';
+		try{
+			grids[gridNum].innerHTML = numString+'<input onkeypress="return /[a-z]/i.test(event.key)" type="text" id="'+gridNum+box.letter+'" class="'+classStr+'" maxlength="1">';
+		} catch(e){
+			console.log(e);
+		}
 
 	}
 

@@ -11,9 +11,14 @@ var clients = [];
 var allChanges = {};
 var numLets = 0;
 io.on("connection", (socket) => {
+
+	let rawCrossfig = fs.readFileSync(__dirname+"/crossfig.json");
+	let crossFig = JSON.parse(rawCrossfig);
+	console.log(crossFig);
+
 	console.log("a user connected");
 	clients.push(socket.id)
-	fs.readFile(__dirname+"/sample.xw", (err,data) => {
+	fs.readFile(__dirname+crossFig["xw"], (err,data) => {
 		var dataArr = data.toString("utf-8").split('\n');
 		for(var i of dataArr){
 			if(!(i.match(/!B/) || i==="")){
@@ -28,7 +33,7 @@ io.on("connection", (socket) => {
 		}
 	});
 
-	fs.readFile(__dirname+"/sample.clue", (err,data) => {
+	fs.readFile(__dirname+crossFig["clue"], (err,data) => {
 		var dataArr = data.toString("utf-8").split('\n');
 		var isAcross = true;
 		for(var i of dataArr){
