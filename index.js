@@ -59,7 +59,7 @@ io.on("connection", (socket) => {
 		if(allChanges.length === numLets){
 			var good = true;
 			for(var i of allChanges){
-				var iLet = /[0-9]+(.)/.exec(i)[1];
+				var iLet = /[0-9]*(.)/.exec(i)[1];
 				if(iLet !== allChanges[i].toUpperCase()){
 					good = false;
 					break;
