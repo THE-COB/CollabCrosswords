@@ -42,7 +42,7 @@ io.on("connection", (socket) => {
 				var parsedClue = /([0-9]+),,(.*)/.exec(i);
 				var num = parseInt(parsedClue[1]);
 				var txt = parsedClue[2];
-				io.sockets.connected[clients[clients.length-1]].emit("clue", [num,txt,isAcross]);
+				io.sockets.connected[clients[clients.length-1]].emit("clue", num+",,"+txt+",,"+isAcross);
 			}
 		}
 	});

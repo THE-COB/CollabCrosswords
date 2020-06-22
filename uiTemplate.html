@@ -415,7 +415,12 @@
 		});
 
 		socket.on("clue", (newClue) => {
-			addClue(newClue[0],newClue[1],newClue[2]);
+			var parsedClue = newClue.split(",,");
+			var parsedA = true;
+			if(parsedClue[2] == "false"){
+				parsedA = false;
+			}
+			addClue(parsedClue[0],parsedClue[1],parsedA);
 		});
 
 		socket.on("changeLetter", (fix) => {
