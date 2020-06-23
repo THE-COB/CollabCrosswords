@@ -436,5 +436,50 @@
 		});
 	});
 
+	document.onkeydown = function(e){
+		if(e.which >= 37 && e.which <= 40){
+			var curInp = parseInt(/([0-9]*)[a-zA-Z]/.exec(document.activeElement.id)[1]);
+			var allSpans = document.getElementsByClassName("grid")[0].children;
+			var changer = 0;
+			if(e.which === 37){
+				if(curInp === 0){
+					return;
+				}
+				changer = -1;
+				while(allSpans[curInp+changer].lastElementChild.className === "blacked"){
+					changer-=1;
+				}
+			}
+			else if(e.which === 39){
+				if(curInp === 224){
+					return;
+				}
+				changer = 1;
+				while(allSpans[curInp+changer].lastElementChild.className === "blacked"){
+					changer+=1;
+				}
+			}
+			else if(e.which === 38){
+				if(curInp < 15){
+					return;
+				}
+				changer = -15;
+				while(allSpans[curInp+changer].lastElementChild.className === "blacked"){
+					changer-=15;
+				}
+			}
+			else if(e.which === 40){
+				if(curInp > 209){
+					return;
+				}
+				changer = 15;
+				while(allSpans[curInp+changer].lastElementChild.className === "blacked"){
+					changer+=15;
+				}
+			}
+			allSpans[curInp+changer].lastElementChild.select();
+		}
+	}
+
 
 </script>
